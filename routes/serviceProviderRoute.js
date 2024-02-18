@@ -9,7 +9,7 @@ import {
   addReviewToServiceProvider,
   addRatingToServiceProvider,
   getServiceProviderByServiceName,
-  getReviewsByServiceProviderAndUser,
+ 
   login,
   logout,
   signup,
@@ -35,9 +35,6 @@ route.get("/login", login);
 route.post("/forgotpassword", forgotPassword);
 route.put("/updatewithlogintoken/:id", authMiddleware_sp, updatewithlogintoken);
 
-route.get(
-  "/:serviceProviderId/reviews/:userId",
-  getReviewsByServiceProviderAndUser
-);
+
 
 export default route;

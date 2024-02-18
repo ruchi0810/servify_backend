@@ -167,6 +167,7 @@ export const deleteServiceProvider = async (req, res) => {
       "name mobile"
     );
     const formattedReviews = reviews.map((review) => ({
+      review_id: review._id,
       userId: {
         _id: review.userId._id,
         name: review.userId.name,
@@ -175,6 +176,7 @@ export const deleteServiceProvider = async (req, res) => {
       review: review.reviews,
     }));
     const formattedRatings = ratings.map((rating) => ({
+      rating_id: rating._id,
       userId: {
         _id: rating.userId._id,
         name: rating.userId.name,
@@ -405,49 +407,49 @@ export const addRatingToServiceProvider = async (req, res) => {
   }
 };
 
-export const getReviewsByServiceProviderAndUser = async (req, res) => {
-  try {
-    const { serviceProviderId, userId } = req.params;
+// export const getReviewsByServiceProviderAndUser = async (req, res) => {
+//   try {
+//     const { serviceProviderId, userId } = req.params;
 
-    // Ensure that the service provider and user exist
-    const serviceProvider = await ServiceProvider.findById(serviceProviderId);
-    const user = await User.findById(userId);
+//     // Ensure that the service provider and user exist
+//     const serviceProvider = await ServiceProvider.findById(serviceProviderId);
+//     const user = await User.findById(userId);
 
-    if (!serviceProvider || !user) {
-      return res
-        .status(404)
-        .json({ msg: "Service provider or user not found" });
-    }
+//     if (!serviceProvider || !user) {
+//       return res
+//         .status(404)
+//         .json({ msg: "Service provider or user not found" });
+//     }
 
-    // Retrieve reviews for the specified service provider
-    const reviews = await Review.find({ serviceProviderId })
-      .sort({ createdAt: -1 }) // Sort by creation date in descending order
-      .populate({
-        path: "userId",
-        select: "name mobile",
-      });
+//     // Retrieve reviews for the specified service provider
+//     const reviews = await Review.find({ serviceProviderId })
+//       .sort({ createdAt: -1 }) // Sort by creation date in descending order
+//       .populate({
+//         path: "userId",
+//         select: "name mobile",
+//       });
 
-    // Separate reviews by the specified user and other users
-    const userReviews = [];
-    const otherUserReviews = [];
+//     // Separate reviews by the specified user and other users
+//     const userReviews = [];
+//     const otherUserReviews = [];
 
-    reviews.forEach((review) => {
-      if (review.userId._id.toString() === userId) {
-        userReviews.unshift(review); // Add user's reviews to the beginning of the array
-      } else {
-        otherUserReviews.push(review); // Add other users' reviews to the end of the array
-      }
-    });
+//     reviews.forEach((review) => {
+//       if (review.userId._id.toString() === userId) {
+//         userReviews.unshift(review); // Add user's reviews to the beginning of the array
+//       } else {
+//         otherUserReviews.push(review); // Add other users' reviews to the end of the array
+//       }
+//     });
 
-    // Combine user reviews and other user reviews
-    const combinedReviews = userReviews.concat(otherUserReviews);
+//     // Combine user reviews and other user reviews
+//     const combinedReviews = userReviews.concat(otherUserReviews);
 
-    res.status(200).json(combinedReviews);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-//GET http://localhost:8000/api/service-providers/SP_ID/reviews/USER_ID
+//     res.status(200).json(combinedReviews);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+// //GET http://localhost:8000/api/service-providers/SP_ID/reviews/USER_ID
 
 export const signup = async (req, res) => {
   try {
